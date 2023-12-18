@@ -1,0 +1,122 @@
+//namespace SharpCalculator.Parsing;
+
+public enum TokenType
+{
+    BracketOpen,
+    BracketClose,
+    OperatorPow,
+    OperatorMul,
+    OperatorMod,
+    OperatorDiv,
+    OperatorAdd,
+    OperatorSub,
+    Literal,
+    Number
+}
+
+public class Token
+{
+    string Str;
+    TokenType Type;
+
+    public static Token() Create(string str, TokenType type){
+        Token() tok = {
+            Str = str,
+            Type = type
+        };
+        return tok;
+    }
+
+    public string GetStr() => Str;
+    public TokenType GetType() => Type;
+}
+
+public class Lexer
+{
+    string ExprStr;
+
+    protected List<Token>() tokens;
+    protected TokenType tokType = TokenType.Number;
+    protected int tokBegin = 0;
+    protected int i = 0;
+
+    protected Token() TokBracketOpen;
+    protected Token() TokBracketClose;
+    protected Token() TokPow;
+    protected Token() TokMul;
+    protected Token() TokMod;
+    protected Token() TokDiv;
+    protected Token() TokAdd;
+    protected Token() TokSub;
+
+    public Lexer(){
+        TokBracketOpen = Token.Create("(", TokenType.BracketOpen);
+        TokBracketClose = Token.Create(")", TokenType.BracketClose);
+        TokPow = Token.Create("^", TokenType.OperatorPow);
+        TokMul = Token.Create("*", TokenType.OperatorMul);
+        TokMod = Token.Create("%", TokenType.OperatorMod);
+        TokDiv = Token.Create("/", TokenType.OperatorDiv);
+        TokAdd = Token.Create("+", TokenType.OperatorAdd);
+        TokSub = Token.Create("-", TokenType.OperatorSub);
+    }
+
+    public Token[]# Lex!()
+    {
+        while (i < ExprStr.Length)
+        {
+            switch (ExprStr[i])
+            {
+                // end token, add new predifined token and move next
+                case '(': AddStaticToken(TokBracketOpen); break;
+                case ')': AddStaticToken(TokBracketClose); break;
+                case '^': AddStaticToken(TokPow); break;
+                case '*': AddStaticToken(TokMul); break;
+                case '%': AddStaticToken(TokMod); break;
+                case '/': AddStaticToken(TokDiv); break;
+                case '+': AddStaticToken(TokAdd); break;
+                case '-': AddStaticToken(TokSub); break;
+                // try end token and skip current char
+                case ' ': case '\t': case '\n': case '\r':
+                    TryEndToken();
+                    i++;
+                    break;
+                // move next
+                case '0': case '1': case '2': case '3': case '4':
+                case '5': case '6': case '7': case '8': case '9':
+                    i++;
+                    break;
+                // set type from Numeric to Literal
+                default:
+                    tokType = TokenType.Literal;
+                    i++;
+                    break;
+            }
+        }
+
+        // end last token
+        TryEndToken();
+        Token[]# tokensArray = new Token[tokens.Count];
+        tokens.CopyTo(0, tokensArray, 0, tokens.Count);
+        return tokensArray;
+    }
+
+    void TryEndToken!()
+    {
+        if (tokBegin != i)
+        {
+            string() tokStr = ExprStr.Substring(tokBegin, i - tokBegin);
+            Token() tok = { Str=tokStr, Type = tokType };
+            tokens.Add(tok);
+            tokType = TokenType.Number;
+            tokBegin = i;
+        }
+    }
+
+    void AddStaticToken!(Token tok)
+    {
+        TryEndToken();
+        tokens.Add(tok);
+        tokType = TokenType.Number;
+        tokBegin = ++i;
+    }
+}

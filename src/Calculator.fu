@@ -1,0 +1,20 @@
+public static class Calculator
+{
+    public static void Main(string[] args){
+        string() joined = "";
+        foreach(string arg in args){
+            joined += arg;
+        }
+        double rezult = Calculate(joined);
+        Console.WriteLine(rezult);
+    }
+
+    public static double Calculate(string exprStr)
+    {
+        Lexer() lexer = { ExprStr = exprStr};
+        Token[]# tokens = lexer.Lex();
+        Parser() parser = { Tokens = tokens };
+        IExpression# expr = parser.Parse();
+        return expr.Calculate();
+    }
+}

@@ -1,0 +1,9 @@
+public class Parser
+{
+    Token[]# Tokens;
+
+    public IExpression# Parse(){
+        NumericExpression# n = new NumericExpression { N = 1 };
+        return n;
+    }
+}

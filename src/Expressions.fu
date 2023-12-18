@@ -1,0 +1,29 @@
+public abstract class IExpression
+{
+    public abstract double Calculate();
+}
+
+public class NumericExpression : IExpression
+{
+    double N;
+    public override double Calculate() => N;
+}
+
+public abstract class OperatorExpression : IExpression
+{
+    IExpression a;
+    IExpression b;
+
+    public abstract double OperatorImplementation(double a, double b);
+
+    public double Calculate() => OperatorImplementation(a.Calculate(), b.Calculate());
+}
+
+public abstract class FunctionCallExpression : IExpression
+{
+    IExpression x;
+
+    public abstract double FunctionImplementation(double x);
+
+    public double Calculate() => FunctionImplementation(x.Calculate());
+}
