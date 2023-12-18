@@ -1,0 +1,30 @@
+public enum TokenType
+{
+    BracketOpen=1,
+    BracketClose=2,
+    OperatorPow=3,
+    OperatorMul=4,
+    OperatorMod=5,
+    OperatorDiv=6,
+    OperatorAdd=7,
+    OperatorSub=8,
+    Literal=9,
+    Number=10
+}
+
+public class Token
+{
+    string Str;
+    TokenType Type;
+
+    public static Token() Create(string str, TokenType type){
+        Token() tok = {
+            Str = str,
+            Type = type
+        };
+        return tok;
+    }
+
+    public string GetStr() => Str;
+    public TokenType GetType() => Type;
+}
