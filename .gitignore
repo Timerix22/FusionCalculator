@@ -1,4 +1,7 @@
 bin/
 obj/
 out/
+tmp/
+temp/
+.vscode/
 *.log
