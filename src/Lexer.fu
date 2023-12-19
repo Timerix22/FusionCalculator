@@ -1,33 +1,33 @@
-public class Lexer
+class Lexer
 {
     string ExprStr;
 
-    protected List<Token>() tokens;
-    protected TokenType tokType = TokenType.Number;
-    protected int tokBegin = 0;
-    protected int i = 0;
+    List<Token()>() tokens;
+    int tokType = Token.Type_Number;
+    int tokBegin = 0;
+    int i = 0;
 
-    protected Token() TokBracketOpen;
-    protected Token() TokBracketClose;
-    protected Token() TokPow;
-    protected Token() TokMul;
-    protected Token() TokMod;
-    protected Token() TokDiv;
-    protected Token() TokAdd;
-    protected Token() TokSub;
+    Token() TokBracketOpen;
+    Token() TokBracketClose;
+    Token() TokPow;
+    Token() TokMul;
+    Token() TokMod;
+    Token() TokDiv;
+    Token() TokAdd;
+    Token() TokSub;
 
     public Lexer(){
-        TokBracketOpen = Token.Create("(", TokenType.BracketOpen);
-        TokBracketClose = Token.Create(")", TokenType.BracketClose);
-        TokPow = Token.Create("^", TokenType.OperatorPow);
-        TokMul = Token.Create("*", TokenType.OperatorMul);
-        TokMod = Token.Create("%", TokenType.OperatorMod);
-        TokDiv = Token.Create("/", TokenType.OperatorDiv);
-        TokAdd = Token.Create("+", TokenType.OperatorAdd);
-        TokSub = Token.Create("-", TokenType.OperatorSub);
+        TokBracketOpen = Token.Create("(", 0, 1, Token.Type_BracketOpen);
+        TokBracketClose = Token.Create(")", 0, 1, Token.Type_BracketClose);
+        TokPow = Token.Create("^", 0, 1, Token.Type_OperatorPow);
+        TokMul = Token.Create("*", 0, 1, Token.Type_OperatorMul);
+        TokMod = Token.Create("%", 0, 1, Token.Type_OperatorMod);
+        TokDiv = Token.Create("/", 0, 1, Token.Type_OperatorDiv);
+        TokAdd = Token.Create("+", 0, 1, Token.Type_OperatorAdd);
+        TokSub = Token.Create("-", 0, 1, Token.Type_OperatorSub);
     }
 
-    public Token[]# Lex!()
+    internal List<Token()> Lex!()
     {
         while (i < ExprStr.Length)
         {
@@ -54,7 +54,7 @@ public class Lexer
                     break;
                 // set type from Numeric to Literal
                 default:
-                    tokType = TokenType.Literal;
+                    tokType = Token.Type_Literal;
                     i++;
                     break;
             }
@@ -62,28 +62,27 @@ public class Lexer
 
         // end last token
         TryEndToken();
-        Token[]# tokensArray = new Token[tokens.Count];
-        tokens.CopyTo(0, tokensArray, 0, tokens.Count);
-        return tokensArray;
+        return tokens;
     }
 
     void TryEndToken!()
     {
         if (tokBegin != i)
         {
-            string() tokStr = ExprStr.Substring(tokBegin, i - tokBegin);
-            Token() tok = { Str=tokStr, Type = tokType };
-            tokens.Add(tok);
-            tokType = TokenType.Number;
+            Token() tok = Token.Create(ExprStr, tokBegin, i - tokBegin, tokType);
+            tokens.Add();
+            tokens[tokens.Count-1] = tok;
+            tokType = Token.Type_Number;
             tokBegin = i;
         }
     }
 
-    void AddStaticToken!(Token tok)
+    void AddStaticToken!(Token() tok)
     {
         TryEndToken();
-        tokens.Add(tok);
-        tokType = TokenType.Number;
+        tokens.Add();
+        tokens[tokens.Count-1] = tok;
+        tokType = Token.Type_Number;
         tokBegin = ++i;
     }
 }

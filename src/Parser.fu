@@ -1,8 +1,8 @@
-public class Parser
+class Parser
 {
-    Token[]# Tokens;
+    List<Token()> Tokens;
 
-    public IExpression# Parse(){
+    internal IExpression# Parse(){
         NumericExpression# n = new NumericExpression { N = 1 };
         return n;
     }
