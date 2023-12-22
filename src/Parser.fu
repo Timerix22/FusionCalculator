@@ -3,9 +3,11 @@ class Parser
     List<Token()> TokenStorage;
     IExpression# RootExpression;
     TokenLinkedList() TokensInRPN;
+    Token() TokZero;
 
     internal Parser(){
         RootExpression = new NumericExpression { N = Math.NaN };
+        TokZero = Token.Create("0", 0, 1, Token.Type_Number);
     }
 
     internal IExpression# Parse!(){
@@ -22,9 +24,13 @@ class Parser
     // Implementation of https://en.wikipedia.org/wiki/Shunting_yard_algorithm
     void SortTokensInRPN!(){
         Stack<Token>() RPNStack;
+        // is needed for negative numbers recognition
+        int prevTokType = Token.Type_BracketOpen;
+
         for(int i = 0; i < TokenStorage.Count; i++){
             Token tok = TokenStorage[i];
             int type = tok.GetType();
+
             switch(type){
                 case Token.Type_Number:
                     TokensInRPN.AddToEnd(tok);
@@ -35,6 +41,8 @@ class Parser
                 case Token.Type_OperatorMod:
                 case Token.Type_OperatorAdd:
                 case Token.Type_OperatorSub:
+                    if(type == Token.Type_OperatorSub && prevTokType == Token.Type_BracketOpen)
+                        TokensInRPN.AddToEnd(TokZero);
                     while(RPNStack.Count != 0 && RPNStack.Peek().GetType() >= type){
                         Token op2 = RPNStack.Pop();
                         TokensInRPN.AddToEnd(op2);
@@ -47,9 +55,8 @@ class Parser
                 case Token.Type_BracketClose:
                     while(RPNStack.Count != 0){
                         Token op2 = RPNStack.Pop();
-                        if(op2.GetType() == Token.Type_BracketOpen){
+                        if(op2.GetType() == Token.Type_BracketOpen)
                             break;
-                        }
                         TokensInRPN.AddToEnd(op2);
                     }
                     break;
@@ -60,6 +67,8 @@ class Parser
                     ThrowError("unexpected token type");
                     break;
             }
+
+            prevTokType = type;
         }
         
         // add remaining operators
@@ -76,8 +85,9 @@ class Parser
         TokenLinkedListNode? tokenNode = TokensInRPN.GetFirstNode();
         while(tokenNode != null){
             Token tok = tokenNode.GetValue();
+            int type = tok.GetType();
 
-            switch(tok.GetType()){
+            switch(type){
                 case Token.Type_Number:
                     expressionStack.Push(new NumericExpression { N = StringToDouble(tok.GetStr()) });
                     break;
@@ -100,14 +110,16 @@ class Parser
                     PushOperatorExpression(expressionStack, tok, new OperatorExpressionSub());
                     break;
                 case Token.Type_BracketClose:
+                    ThrowError("unexpected (");
+                    break;
                 case Token.Type_BracketOpen:
-                    ThrowError("brackets should be handled at SortTokensInRPN");
+                    ThrowError("unexpected )");
                     break;
                 case Token.Type_Literal:
                     ThrowError("not implemented");
                     break;
                 default:
-                    ThrowError("unexpected token type");
+                    ThrowError($"unexpected token type: {type}");
                     break;
             }
 
@@ -139,7 +151,7 @@ class Parser
 
     void PushOperatorExpression(Stack<IExpression#>! expressionStack, Token tok, OperatorExpression# opExpr) {
         if(expressionStack.Count < 2){
-            ThrowError("input error: unexpected operator "+tok.GetStr());
+            ThrowError($"unexpected operator: {tok.GetStr()}");
             return;
         }
         IExpression b = expressionStack.Pop();
