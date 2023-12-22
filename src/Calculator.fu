@@ -19,8 +19,8 @@ public static class Calculator
             string() tokStr = tok.GetStr();
             Console.WriteLine($"'{tokStr}' {tokType:D1}");
         }
-        Parser() parser = { Tokens = tokens };
-        IExpression# expr = parser.Parse();
+        Parser() parser = { TokenStorage = tokens };
+        IExpression expr = parser.Parse();
         return expr.Calculate();
     }
 }

@@ -1,0 +1,26 @@
+class TokenLinkedListNode {
+    Token Value;
+    TokenLinkedListNode!? Prev = null;
+    TokenLinkedListNode!? Next = null;
+
+    internal Token GetValue() => Value;
+    internal void SetValue!(Token value) { Value = value; }
+
+    internal TokenLinkedListNode!? GetPrev() => Prev;
+    internal void SetPrev!(TokenLinkedListNode! prev) { Prev = prev; }
+
+    internal TokenLinkedListNode!? GetNext() => Next;
+    internal void SetNext!(TokenLinkedListNode! next) { Next = next; }
+
+    internal void InsertAfter!(TokenLinkedListNode! prev){
+        Next = prev.GetNext();
+        Prev = prev;
+        prev.SetNext(this);
+    }
+    
+    internal void InsertBefore!(TokenLinkedListNode! next){
+        Next = next;
+        Prev = next.GetPrev();
+        next.SetPrev(this);
+    }
+}

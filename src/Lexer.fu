@@ -2,7 +2,7 @@ class Lexer
 {
     string ExprStr;
 
-    List<Token()>() tokens;
+    List<Token()>() TokenStorage;
     int tokType = Token.Type_Number;
     int tokBegin = 0;
     int i = 0;
@@ -62,7 +62,7 @@ class Lexer
 
         // end last token
         TryEndToken();
-        return tokens;
+        return TokenStorage;
     }
 
     void TryEndToken!()
@@ -70,8 +70,8 @@ class Lexer
         if (tokBegin != i)
         {
             Token() tok = Token.Create(ExprStr, tokBegin, i - tokBegin, tokType);
-            tokens.Add();
-            tokens[tokens.Count-1] = tok;
+            TokenStorage.Add();
+            TokenStorage[TokenStorage.Count-1] = tok;
             tokType = Token.Type_Number;
             tokBegin = i;
         }
@@ -80,8 +80,8 @@ class Lexer
     void AddStaticToken!(Token() tok)
     {
         TryEndToken();
-        tokens.Add();
-        tokens[tokens.Count-1] = tok;
+        TokenStorage.Add();
+        TokenStorage[TokenStorage.Count-1] = tok;
         tokType = Token.Type_Number;
         tokBegin = ++i;
     }

@@ -7,16 +7,16 @@ class Token
     // The Type is also the priority of the token in calculation (see Parser). 
     int Type;
 
-    public const int Type_BracketOpen=1;
-    public const int Type_BracketClose=2;
-    public const int Type_OperatorPow=3;
-    public const int Type_OperatorMul=4;
-    public const int Type_OperatorMod=5;
-    public const int Type_OperatorDiv=6;
-    public const int Type_OperatorAdd=7;
-    public const int Type_OperatorSub=8;
-    public const int Type_Number=9;
-    public const int Type_Literal=10;
+    public const int Type_BracketOpen=10;
+    public const int Type_BracketClose=9;
+    public const int Type_OperatorPow=8;
+    public const int Type_OperatorMul=7;
+    public const int Type_OperatorMod=6;
+    public const int Type_OperatorDiv=5;
+    public const int Type_OperatorAdd=4;
+    public const int Type_OperatorSub=3;
+    public const int Type_Number=2;
+    public const int Type_Literal=1;
 
     internal static Token() Create(string str, int startIndex, int length, int type){
         Token() tok = {

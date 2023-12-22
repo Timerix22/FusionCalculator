@@ -1,9 +1,65 @@
 class Parser
 {
-    List<Token()> Tokens;
+    List<Token()> TokenStorage;
+    Stack<Token>() RPNStack;
+    IExpression# RootNode;
+    TokenLinkedList() TokensInRPN;
 
-    internal IExpression# Parse(){
-        NumericExpression# n = new NumericExpression { N = 1 };
-        return n;
+    internal IExpression# Parse!(){
+        SortTokensInRPN();
+        BuildTreeFromRPN();
+        return RootNode;
+    }
+
+    // Implementation of https://en.wikipedia.org/wiki/Shunting_yard_algorithm
+    void SortTokensInRPN!(){
+        for(int i = 0; i < TokenStorage.Count; i++){
+            Token tok = TokenStorage[i];
+            int type = tok.GetType();
+            switch(type){
+                case Token.Type_Number:
+                    TokensInRPN.AddToEnd(tok);
+                    break;
+                case Token.Type_OperatorPow:
+                case Token.Type_OperatorMul:
+                case Token.Type_OperatorDiv:
+                case Token.Type_OperatorMod:
+                case Token.Type_OperatorAdd:
+                case Token.Type_OperatorSub:
+                    while(RPNStack.Count != 0 && RPNStack.Peek().GetType() >= type){
+                        Token op2 = RPNStack.Pop();
+                        TokensInRPN.AddToEnd(op2);
+                    }
+                    RPNStack.Push(tok);
+                    break;
+                case Token.Type_BracketOpen:
+                    RPNStack.Push(tok);
+                    break;
+                case Token.Type_BracketClose:
+                    while(RPNStack.Count != 0){
+                        Token op2 = RPNStack.Pop();
+                        TokensInRPN.AddToEnd(op2);
+                    }
+                    break;
+                case Token.Type_Literal:
+                    // not implemented
+                    assert false;
+                default:
+                    // unexpected token type
+                    assert false;
+            }
+        }
+        
+        // add remaining operators
+        while(RPNStack.Count != 0){
+            Token op2 = RPNStack.Pop();
+            TokensInRPN.AddToEnd(op2);
+        }
+    }
+    
+    void BuildTreeFromRPN!(){
+        RootNode = new NumericExpression { N = 0 };
+        string() graphviz = TokensInRPN.ToGraphVizCode();
+        Console.WriteLine(graphviz);
     }
 }

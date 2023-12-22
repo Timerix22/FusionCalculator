@@ -1,0 +1,74 @@
+class TokenLinkedList {
+    TokenLinkedListNode!? FirstNode = null;
+    TokenLinkedListNode!? LastNode = null;
+    List<TokenLinkedListNode()>() Storage;
+
+    internal TokenLinkedListNode! GetFirstNode() => FirstNode;
+    internal TokenLinkedListNode! GetLastNode() => LastNode;
+
+    internal void AddToStart!(Token tok) {
+        TokenLinkedListNode! node = CreateOrphanedNode(tok);
+        if(FirstNode == null){
+            assert LastNode == null; 
+            FirstNode = node;
+            LastNode = node;
+        }
+        else {
+            assert FirstNode.GetPrev() == null;
+            FirstNode.SetPrev(node);
+            FirstNode = node;
+        }
+    }
+
+    internal void AddToEnd!(Token tok) {
+        TokenLinkedListNode! node = CreateOrphanedNode(tok);
+        if(LastNode == null){
+            assert FirstNode == null;
+            FirstNode = node;
+            LastNode = node;
+        }
+        else {
+            assert LastNode.GetNext() == null;
+            LastNode.SetNext(node);
+            LastNode = node;
+        }
+    }
+
+    internal TokenLinkedListNode# CreateOrphanedNode!(Token tok) {
+        TokenLinkedListNode# sharedPtr = new TokenLinkedListNode { 
+            Value = tok, 
+            Prev = null, 
+            Next = null 
+        };
+        return sharedPtr;
+    }
+
+    // Can be used by GraphViz to create node graph.
+    // GraphViz online: https://dreampuf.github.io/GraphvizOnline/  
+    internal string() ToGraphVizCode() {
+        string() s = "strict digraph {\n" +  /* directed graph with no multi-edges */
+            "    start [shape=Mdiamond];\n" + /* 'start' node style */
+            "    end [shape=Msquare];\n" + /* 'end' node style */
+            "    node [style=filled,color=white];\n";  /* regular node style */
+        
+        TokenLinkedListNode? currentNode = null;
+        TokenLinkedListNode? nextNode = FirstNode;
+        string() currentNodeName = "start";
+        // enumerating the tree from FirstNode
+        while(nextNode != null){
+            string() nextTokStr = nextNode.GetValue().GetStr();
+            string() nextNodeName =  "\"";
+            nextNodeName += nextTokStr;
+            nextNodeName += "\"";
+            s += $"    {currentNodeName} -> {nextNodeName};\n";
+
+            currentNodeName = nextNodeName;
+            currentNode = nextNode;
+            nextNode = currentNode.GetNext();
+        }
+        if(currentNode == LastNode)
+            s += $"    {currentNodeName} -> end;\n";
+        s += "}";
+        return s;
+    }
+}
