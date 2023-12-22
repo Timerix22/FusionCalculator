@@ -1,5 +1,4 @@
-class NumericExpression : IExpression
-{
+class NumericExpression : IExpression {
     double N;
 
     internal void Init!(double n){

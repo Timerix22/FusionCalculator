@@ -1,12 +1,11 @@
-class Token
-{
+class Token {
     string Str;
     int StartIndex;
     int Length;
     // It is not a enum because there is no way to convert enum value to int in Fusion.
-    // The Type is also the priority of the token in calculation (see Parser). 
+    // The Type is also the priority of the token in calculation (see Parser).
     int Type;
-
+    
     public const int Type_OperatorPow=10;
     public const int Type_OperatorMul=9;
     public const int Type_OperatorMod=8;

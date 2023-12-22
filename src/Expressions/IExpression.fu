@@ -1,4 +1,3 @@
-abstract class IExpression
-{
+abstract class IExpression {
     internal abstract double Calculate();
 }

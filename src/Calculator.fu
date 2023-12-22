@@ -1,16 +1,5 @@
-public static class Calculator
-{
-    public static void Main(string[] args){
-        string() joined = "";
-        foreach(string arg in args){
-            joined += arg;
-        }
-        double rezult = Calculate(joined);
-        Console.WriteLine(rezult);
-    }
-
-    public static double Calculate(string exprStr)
-    {
+public static class Calculator {
+    public static double Calculate(string exprStr) {
         Lexer() lexer;
         List<Token()> tokens = lexer.Lex(exprStr);
         // lexer.PrintTokens();

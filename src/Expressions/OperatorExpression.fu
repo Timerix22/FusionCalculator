@@ -1,5 +1,4 @@
-abstract class OperatorExpression : IExpression
-{
+abstract class OperatorExpression : IExpression {
     IExpression A;
     IExpression B;
 

@@ -1,5 +1,4 @@
-abstract class FunctionCallExpression : IExpression
-{
+abstract class FunctionCallExpression : IExpression {
     IExpression X;
 
     internal void Init!(IExpression x){

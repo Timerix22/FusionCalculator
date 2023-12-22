@@ -43,7 +43,7 @@ class TokenLinkedList {
     }
 
     // Can be used by GraphViz to create node graph.
-    // GraphViz online: https://dreampuf.github.io/GraphvizOnline/  
+    // GraphViz online: https://dreampuf.github.io/GraphvizOnline/
     internal string() ToGraphVizCode() {
         string() s = "strict digraph {\n" +  /* directed graph with no multi-edges */
             "    start [shape=Mdiamond];\n" + /* 'start' node style */

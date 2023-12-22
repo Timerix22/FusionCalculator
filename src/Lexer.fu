@@ -1,7 +1,5 @@
-class Lexer
-{
+class Lexer {
     string ExprStr;
-
     List<Token()>() TokenStorage;
     int tokType = Token.Type_Number;
     int tokBegin = 0;
@@ -39,10 +37,8 @@ class Lexer
     internal List<Token()> Lex!(string exprStr){
         ExprStr = exprStr;
 
-        while (i < ExprStr.Length)
-        {
-            switch (ExprStr[i])
-            {
+        while (i < ExprStr.Length) {
+            switch (ExprStr[i]) {
                 // end token, add new predifined token and move next
                 case '(': AddStaticToken(TokBracketOpen); break;
                 case ')': AddStaticToken(TokBracketClose); break;
@@ -75,10 +71,8 @@ class Lexer
         return TokenStorage;
     }
 
-    void TryEndToken!()
-    {
-        if (tokBegin != i)
-        {
+    void TryEndToken!() {
+        if (tokBegin != i) {
             Token() tok = Token.Create(ExprStr, tokBegin, i - tokBegin, tokType);
             TokenStorage.Add();
             TokenStorage[TokenStorage.Count-1] = tok;
@@ -87,8 +81,7 @@ class Lexer
         }
     }
 
-    void AddStaticToken!(Token() tok)
-    {
+    void AddStaticToken!(Token() tok) {
         TryEndToken();
         TokenStorage.Add();
         TokenStorage[TokenStorage.Count-1] = tok;
