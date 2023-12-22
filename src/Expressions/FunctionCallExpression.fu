@@ -1,0 +1,36 @@
+abstract class FunctionCallExpression : IExpression
+{
+    IExpression X;
+
+    internal void Init!(IExpression x){
+        X = x;
+    }
+
+    internal abstract double FunctionImplementation(double x);
+
+    internal override double Calculate() => FunctionImplementation(X.Calculate());
+}
+
+class FunctionCallExpressionSin : FunctionCallExpression {
+    internal override double FunctionImplementation(double x) => Math.Sin(x);
+}
+class FunctionCallExpressionCos : FunctionCallExpression {
+    internal override double FunctionImplementation(double x) => Math.Cos(x);
+}
+class FunctionCallExpressionTan : FunctionCallExpression {
+    internal override double FunctionImplementation(double x) => Math.Tan(x);
+}
+
+class FunctionCallExpressionAsin : FunctionCallExpression {
+    internal override double FunctionImplementation(double x) => Math.Asin(x);
+}
+class FunctionCallExpressionAcos : FunctionCallExpression {
+    internal override double FunctionImplementation(double x) => Math.Acos(x);
+}
+class FunctionCallExpressionAtan : FunctionCallExpression {
+    internal override double FunctionImplementation(double x) => Math.Atan(x);
+}
+
+class FunctionCallExpressionLog : FunctionCallExpression{
+    internal override double FunctionImplementation(double x) => Math.Log(x);
+}

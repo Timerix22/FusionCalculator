@@ -1,18 +1,27 @@
 class Parser
 {
     List<Token()> TokenStorage;
-    Stack<Token>() RPNStack;
-    IExpression# RootNode;
+    IExpression# RootExpression;
     TokenLinkedList() TokensInRPN;
+
+    internal Parser(){
+        RootExpression = new NumericExpression { N = Math.NaN };
+    }
 
     internal IExpression# Parse!(){
         SortTokensInRPN();
-        BuildTreeFromRPN();
-        return RootNode;
+        BuildExpressionTree();
+        return RootExpression;
+    }
+
+    internal void PrintGraphVizCode(){
+        string() graphviz = TokensInRPN.ToGraphVizCode();
+        Console.WriteLine(graphviz);
     }
 
     // Implementation of https://en.wikipedia.org/wiki/Shunting_yard_algorithm
     void SortTokensInRPN!(){
+        Stack<Token>() RPNStack;
         for(int i = 0; i < TokenStorage.Count; i++){
             Token tok = TokenStorage[i];
             int type = tok.GetType();
@@ -38,15 +47,18 @@ class Parser
                 case Token.Type_BracketClose:
                     while(RPNStack.Count != 0){
                         Token op2 = RPNStack.Pop();
+                        if(op2.GetType() == Token.Type_BracketOpen){
+                            break;
+                        }
                         TokensInRPN.AddToEnd(op2);
                     }
                     break;
                 case Token.Type_Literal:
-                    // not implemented
-                    assert false;
+                    ThrowError("not implemented");
+                    break;
                 default:
-                    // unexpected token type
-                    assert false;
+                    ThrowError("unexpected token type");
+                    break;
             }
         }
         
@@ -57,9 +69,89 @@ class Parser
         }
     }
     
-    void BuildTreeFromRPN!(){
-        RootNode = new NumericExpression { N = 0 };
-        string() graphviz = TokensInRPN.ToGraphVizCode();
-        Console.WriteLine(graphviz);
+    // Implementation of https://ru.wikipedia.org/wiki/%D0%9E%D0%B1%D1%80%D0%B0%D1%82%D0%BD%D0%B0%D1%8F_%D0%BF%D0%BE%D0%BB%D1%8C%D1%81%D0%BA%D0%B0%D1%8F_%D0%B7%D0%B0%D0%BF%D0%B8%D1%81%D1%8C#%D0%9E%D0%B1%D1%89%D0%B8%D0%B9_%D0%BF%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA
+    void BuildExpressionTree!(){
+        Stack<IExpression#>() expressionStack;
+
+        TokenLinkedListNode? tokenNode = TokensInRPN.GetFirstNode();
+        while(tokenNode != null){
+            Token tok = tokenNode.GetValue();
+
+            switch(tok.GetType()){
+                case Token.Type_Number:
+                    expressionStack.Push(new NumericExpression { N = StringToDouble(tok.GetStr()) });
+                    break;
+                case Token.Type_OperatorPow:
+                    PushOperatorExpression(expressionStack, tok, new OperatorExpressionPow());
+                    break;
+                case Token.Type_OperatorMul:
+                    PushOperatorExpression(expressionStack, tok, new OperatorExpressionMul());
+                    break;
+                case Token.Type_OperatorDiv:
+                    PushOperatorExpression(expressionStack, tok, new OperatorExpressionDiv());
+                    break;
+                case Token.Type_OperatorMod:
+                    PushOperatorExpression(expressionStack, tok, new OperatorExpressionMod());
+                    break;
+                case Token.Type_OperatorAdd:
+                    PushOperatorExpression(expressionStack, tok, new OperatorExpressionAdd());
+                    break;
+                case Token.Type_OperatorSub:
+                    PushOperatorExpression(expressionStack, tok, new OperatorExpressionSub());
+                    break;
+                case Token.Type_BracketClose:
+                case Token.Type_BracketOpen:
+                    ThrowError("brackets should be handled at SortTokensInRPN");
+                    break;
+                case Token.Type_Literal:
+                    ThrowError("not implemented");
+                    break;
+                default:
+                    ThrowError("unexpected token type");
+                    break;
+            }
+
+            tokenNode = tokenNode.GetNext();
+        }
+
+        if(expressionStack.Count == 1)
+            RootExpression = expressionStack.Pop();
+    }
+
+    // returns the number or NaN
+    static double StringToDouble(string s){
+        double d = Math.NaN;
+        #if C
+            native{
+                d = strtod(s, NULL);
+            }
+        #elif CS
+            native {
+                d = Convert.ToDouble(s, System.Globalization.CultureInfo.InvariantCulture);
+            }
+        #else
+            native {
+                #error "UNKNOWN PROGRAMMING LANGUAGE (define C or CS)";
+            }
+        #endif
+        return d;
+    }
+
+    void PushOperatorExpression(Stack<IExpression#>! expressionStack, Token tok, OperatorExpression# opExpr) {
+        if(expressionStack.Count < 2){
+            ThrowError("input error: unexpected operator "+tok.GetStr());
+            return;
+        }
+        IExpression b = expressionStack.Pop();
+        IExpression a = expressionStack.Pop();
+        opExpr.Init(a, b);
+        expressionStack.Push(opExpr);
+    }
+
+    static void ThrowError(string errmsg){
+        #if C
+            Console.WriteLine("ERROR: "+errmsg);
+        #endif
+        assert false, errmsg;
     }
 }

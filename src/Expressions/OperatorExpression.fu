@@ -1,0 +1,51 @@
+abstract class OperatorExpression : IExpression
+{
+    IExpression A;
+    IExpression B;
+
+    internal void Init!(IExpression a, IExpression b) {
+        A = a;
+        B = b;
+    }
+
+    internal abstract double OperatorImplementation(double a, double b);
+
+    internal override double Calculate() => OperatorImplementation(A.Calculate(), B.Calculate());
+}
+
+class OperatorExpressionAdd : OperatorExpression {
+    internal override double OperatorImplementation(double a, double b) => a+b;
+}
+
+class OperatorExpressionSub : OperatorExpression {
+    internal override double OperatorImplementation(double a, double b) => a-b;
+}
+
+class OperatorExpressionMul : OperatorExpression {
+    internal override double OperatorImplementation(double a, double b) => a*b;
+}
+
+class OperatorExpressionDiv : OperatorExpression {
+    internal override double OperatorImplementation(double a, double b) => a/b;
+}
+
+class OperatorExpressionMod : OperatorExpression {
+    // returns if b>0 then returns a%b else returns a
+    internal override double OperatorImplementation(double a, double b) {
+        if(b <= 0)
+            return a;
+        if(a > 0){
+            while(a >= b)
+                a -= b;
+        }
+        else {
+            while(a <= b)
+                a += b;
+        }
+        return a;
+    }
+}
+
+class OperatorExpressionPow : OperatorExpression {
+    internal override double OperatorImplementation(double a, double b) => Math.Pow(a, b);
+}

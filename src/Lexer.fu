@@ -27,6 +27,15 @@ class Lexer
         TokSub = Token.Create("-", 0, 1, Token.Type_OperatorSub);
     }
 
+    internal void PrintTokens(){
+        for(int i = 0; i < TokenStorage.Count; i++){
+            Token() tok = TokenStorage[i];
+            int tokType = tok.GetType();
+            string() tokStr = tok.GetStr();
+            Console.WriteLine($"'{tokStr}' {tokType:D1}");
+        }
+    }
+
     internal List<Token()> Lex!()
     {
         while (i < ExprStr.Length)

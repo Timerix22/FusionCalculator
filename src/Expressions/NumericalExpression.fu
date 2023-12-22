@@ -1,0 +1,5 @@
+class NumericExpression : IExpression
+{
+    double N;
+    internal override double Calculate() => N;
+}

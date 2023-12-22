@@ -6,21 +6,17 @@ public static class Calculator
             joined += arg;
         }
         double rezult = Calculate(joined);
-        // Console.WriteLine(rezult);
+        Console.WriteLine(rezult);
     }
 
     public static double Calculate(string exprStr)
     {
         Lexer() lexer = { ExprStr = exprStr};
         List<Token()> tokens = lexer.Lex();
-        for(int i = 0; i < tokens.Count; i++){
-            Token() tok = tokens[i];
-            int tokType = tok.GetType();
-            string() tokStr = tok.GetStr();
-            Console.WriteLine($"'{tokStr}' {tokType:D1}");
-        }
+        // lexer.PrintTokens();
         Parser() parser = { TokenStorage = tokens };
         IExpression expr = parser.Parse();
+        // parser.PrintGraphVizCode();
         return expr.Calculate();
     }
 }

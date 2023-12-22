@@ -57,6 +57,9 @@ class TokenLinkedList {
         // enumerating the tree from FirstNode
         while(nextNode != null){
             string() nextTokStr = nextNode.GetValue().GetStr();
+            // % is an escape character in GraphViz
+            if(nextTokStr[0]=='%')
+                nextTokStr = "\\" + nextTokStr;
             string() nextNodeName =  "\"";
             nextNodeName += nextTokStr;
             nextNodeName += "\"";
