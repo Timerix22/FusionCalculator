@@ -6,12 +6,25 @@ BIN_FILE="bin/FusionCalculator.exe"
 SRC_FILES="$(find src/ -name '*.fu')"
 WARNINGS="-Wall -Wno-unused-value -Wno-unused-function -Wno-unused-variable -Wno-discarded-qualifiers"
 INCLUDES="$(pkg-config --cflags glib-2.0)"
-COMPILER_ARGS="-O0 -g"
+
+if [[ $1 == '--debug' ]]; then
+    COMPILER_ARGS="-O0 -g"
+else
+    COMPILER_ARGS="-O2"
+fi
 LINKER_ARGS="$(pkg-config --libs glib-2.0) -lm"
 
 rm -rf out bin
 mkdir out bin
 
-fut -l c -D C -o "$OUT_FILE" $SRC_FILES
+args="-l c -D C -o "$OUT_FILE" $SRC_FILES"
+echo "------------[fut]------------"
+echo fut $args
+fut $args
 
-gcc $WARNINGS $COMPILER_ARGS "$OUT_FILE" -o "$BIN_FILE" $INCLUDES $LINKER_ARGS
+if [[ $1 != '--translate-only' ]]; then
+    echo "------------[gcc]------------"
+    args="$WARNINGS $COMPILER_ARGS "$OUT_FILE" -o "$BIN_FILE" $INCLUDES $LINKER_ARGS"
+    echo gcc $args
+    gcc $args
+fi

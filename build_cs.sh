@@ -13,9 +13,13 @@ for src_file in $SRC_FILES; do
     echo "---------[$src_file]---------"
     out_file="out/$(basename $src_file .fu).cs"
     args="-l cs -D CS -n FusionCalculator $INCLUDES -o $out_file $src_file"
-    echo "fu $args"
+    echo fut $args
     fut $args
 done
 
-echo "---------[FusionCalculator.csproj]---------"
-dotnet build FusionCalculator.csproj  -o bin
+if [[ $1 != '--translate-only' ]]; then
+    echo "---------[FusionCalculator.csproj]---------"
+    args="build -c Release FusionCalculator.exe.csproj -o bin"
+    echo dotnet $args
+    dotnet $args
+fi
