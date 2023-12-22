@@ -7,10 +7,10 @@ class TokenLinkedListNode {
     internal void SetValue!(Token value) { Value = value; }
 
     internal TokenLinkedListNode!? GetPrev() => Prev;
-    internal void SetPrev!(TokenLinkedListNode! prev) { Prev = prev; }
+    internal void SetPrev!(TokenLinkedListNode!? prev) { Prev = prev; }
 
     internal TokenLinkedListNode!? GetNext() => Next;
-    internal void SetNext!(TokenLinkedListNode! next) { Next = next; }
+    internal void SetNext!(TokenLinkedListNode!? next) { Next = next; }
 
     internal void InsertAfter!(TokenLinkedListNode! prev){
         Next = prev.GetNext();

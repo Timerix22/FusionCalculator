@@ -11,11 +11,11 @@ public static class Calculator
 
     public static double Calculate(string exprStr)
     {
-        Lexer() lexer = { ExprStr = exprStr};
-        List<Token()> tokens = lexer.Lex();
+        Lexer() lexer;
+        List<Token()> tokens = lexer.Lex(exprStr);
         // lexer.PrintTokens();
-        Parser() parser = { TokenStorage = tokens };
-        IExpression expr = parser.Parse();
+        Parser() parser;
+        IExpression expr = parser.Parse(tokens);
         // parser.PrintGraphVizCode();
         return expr.Calculate();
     }

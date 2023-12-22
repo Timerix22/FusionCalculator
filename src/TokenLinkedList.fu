@@ -35,12 +35,11 @@ class TokenLinkedList {
     }
 
     internal TokenLinkedListNode# CreateOrphanedNode!(Token tok) {
-        TokenLinkedListNode# sharedPtr = new TokenLinkedListNode { 
-            Value = tok, 
-            Prev = null, 
-            Next = null 
-        };
-        return sharedPtr;
+        TokenLinkedListNode# node = new TokenLinkedListNode();
+        node.SetValue(tok);
+        node.SetPrev(null); 
+        node.SetNext(null);
+        return node;
     }
 
     // Can be used by GraphViz to create node graph.

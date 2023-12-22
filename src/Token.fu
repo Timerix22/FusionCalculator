@@ -29,5 +29,5 @@ class Token
     }
 
     internal string() GetStr() => Str.Substring(StartIndex, Length);
-    internal int GetType() => Type;
+    internal int GetTokType() => Type;
 }

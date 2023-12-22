@@ -1,5 +1,12 @@
 class NumericExpression : IExpression
 {
     double N;
+
+    internal void Init!(double n){
+        N = n;
+    }
+
+    internal NumericExpression(){ N=Math.NaN; }
+
     internal override double Calculate() => N;
 }
