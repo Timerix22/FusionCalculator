@@ -37,7 +37,7 @@ class Lexer {
     internal List<Token()> Lex!(string exprStr){
         ExprStr = exprStr;
 
-        while (i < ExprStr.Length) {
+        for(i=0; i < ExprStr.Length; i++) {
             switch (ExprStr[i]) {
                 // end token, add new predifined token and move next
                 case '(': AddStaticToken(TokBracketOpen); break;
@@ -47,21 +47,22 @@ class Lexer {
                 case '%': AddStaticToken(TokMod); break;
                 case '/': AddStaticToken(TokDiv); break;
                 case '+': AddStaticToken(TokAdd); break;
-                case '-': AddStaticToken(TokSub); break;
+                case '-': 
+                    if(i != 0 && ExprStr[i-1] != '(')
+                        AddStaticToken(TokSub);
+                    // else '-' is a part of numeric expression
+                    break;
                 // try end token and skip current char
                 case ' ': case '\t': case '\n': case '\r':
                     TryEndToken();
-                    i++;
                     break;
                 // move next
                 case '0': case '1': case '2': case '3': case '4':
                 case '5': case '6': case '7': case '8': case '9':
-                    i++;
                     break;
                 // set type from Numeric to Literal
                 default:
                     tokType = Token.Type_Literal;
-                    i++;
                     break;
             }
         }
@@ -86,6 +87,6 @@ class Lexer {
         TokenStorage.Add();
         TokenStorage[TokenStorage.Count-1] = tok;
         tokType = Token.Type_Number;
-        tokBegin = ++i;
+        tokBegin = i+1;
     }
 }
