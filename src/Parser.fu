@@ -39,6 +39,7 @@ class Parser {
                 case Token.Type_OperatorMod:
                 case Token.Type_OperatorAdd:
                 case Token.Type_OperatorSub:
+                case Token.Type_Literal:
                     while(RPNStack.Count != 0 && RPNStack.Peek().GetTokType() >= type){
                         Token op2 = RPNStack.Pop();
                         TokensInRPN.AddToEnd(op2);
@@ -55,9 +56,6 @@ class Parser {
                             break;
                         TokensInRPN.AddToEnd(op2);
                     }
-                    break;
-                case Token.Type_Literal:
-                    ThrowError($"token '{tok.GetStr()}' isn't implemented");
                     break;
                 default:
                     ThrowError($"unexpected token type '{type}'");
@@ -80,30 +78,31 @@ class Parser {
         while(tokenNode != null){
             Token tok = tokenNode.GetValue();
             int type = tok.GetTokType();
+            string() str = tok.GetStr();
 
             switch(type){
                 case Token.Type_Number:
                     NumericExpression# num = new NumericExpression();
-                    num.Init(StringToDouble(tok.GetStr()));
+                    num.Init(StringToDouble(str));
                     expressionStack.Push(num);
                     break;
                 case Token.Type_OperatorPow:
-                    PushOperatorExpression(expressionStack, tok, new OperatorExpressionPow());
+                    PushOperatorExpression(expressionStack, str, new OperatorExpressionPow());
                     break;
                 case Token.Type_OperatorMul:
-                    PushOperatorExpression(expressionStack, tok, new OperatorExpressionMul());
+                    PushOperatorExpression(expressionStack, str, new OperatorExpressionMul());
                     break;
                 case Token.Type_OperatorDiv:
-                    PushOperatorExpression(expressionStack, tok, new OperatorExpressionDiv());
+                    PushOperatorExpression(expressionStack, str, new OperatorExpressionDiv());
                     break;
                 case Token.Type_OperatorMod:
-                    PushOperatorExpression(expressionStack, tok, new OperatorExpressionMod());
+                    PushOperatorExpression(expressionStack, str, new OperatorExpressionMod());
                     break;
                 case Token.Type_OperatorAdd:
-                    PushOperatorExpression(expressionStack, tok, new OperatorExpressionAdd());
+                    PushOperatorExpression(expressionStack, str, new OperatorExpressionAdd());
                     break;
                 case Token.Type_OperatorSub:
-                    PushOperatorExpression(expressionStack, tok, new OperatorExpressionSub());
+                    PushOperatorExpression(expressionStack, str, new OperatorExpressionSub());
                     break;
                 case Token.Type_BracketClose:
                     ThrowError("unexpected '('");
@@ -112,19 +111,46 @@ class Parser {
                     ThrowError("unexpected ')'");
                     break;
                 case Token.Type_Literal:
-                    ThrowError($"token '{tok.GetStr()}' isn't implemented");
+                    switch(str){
+                        case "sin":
+                            PushFunctionExpression(expressionStack, str, new FunctionCallExpressionSin());
+                            break;
+                        case "cos":
+                            PushFunctionExpression(expressionStack, str, new FunctionCallExpressionCos());
+                            break;
+                        case "tan":
+                            PushFunctionExpression(expressionStack, str, new FunctionCallExpressionTan());
+                            break;
+                        case "asin":
+                            PushFunctionExpression(expressionStack, str, new FunctionCallExpressionAsin());
+                            break;
+                        case "acos":
+                            PushFunctionExpression(expressionStack, str, new FunctionCallExpressionAcos());
+                            break;
+                        case "atan":
+                            PushFunctionExpression(expressionStack, str, new FunctionCallExpressionAtan());
+                            break;
+                        case "log":
+                            PushFunctionExpression(expressionStack, str, new FunctionCallExpressionLog());
+                            break;
+                        default: {
+                            ThrowError($"invalid literal '{str}'");
+                        }
+                        break;
+                    }
                     break;
-                default:
+                default: {
                     ThrowError($"unexpected token type '{type}'");
-                    break;
+                }
+                break;
             }
 
             tokenNode = tokenNode.GetNext();
         }
 
-        if(expressionStack.Count == 1)
-            RootExpression = expressionStack.Pop();
-        else RootExpression = new NumericExpression(); // NaN
+        if(expressionStack.Count != 1)
+            ThrowError("");
+        RootExpression = expressionStack.Pop();
     }
 
     // returns the number or NaN
@@ -146,15 +172,24 @@ class Parser {
         return d;
     }
 
-    void PushOperatorExpression(Stack<IExpression#>! expressionStack, Token tok, OperatorExpression# opExpr) {
+    void PushOperatorExpression(Stack<IExpression#>! expressionStack, string tokStr, OperatorExpression# opExpr) {
         if(expressionStack.Count < 2){
-            ThrowError($"unexpected operator '{tok.GetStr()}'");
+            ThrowError($"unexpected operator '{tokStr}'");
             return;
         }
         IExpression b = expressionStack.Pop();
         IExpression a = expressionStack.Pop();
         opExpr.Init(a, b);
         expressionStack.Push(opExpr);
+    }
+    void PushFunctionExpression(Stack<IExpression#>! expressionStack, string tokStr, FunctionCallExpression# fExpr) {
+        if(expressionStack.Count < 1){
+            ThrowError($"unexpected function call '{tokStr}'");
+            return;
+        }
+        IExpression x = expressionStack.Pop();
+        fExpr.Init(x);
+        expressionStack.Push(fExpr);
     }
 
     static void ThrowError(string errmsg){
