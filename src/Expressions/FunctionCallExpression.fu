@@ -16,8 +16,11 @@ class FunctionCallExpressionSin : FunctionCallExpression {
 class FunctionCallExpressionCos : FunctionCallExpression {
     internal override double FunctionImplementation(double x) => Math.Cos(x);
 }
-class FunctionCallExpressionTan : FunctionCallExpression {
+class FunctionCallExpressionTg : FunctionCallExpression {
     internal override double FunctionImplementation(double x) => Math.Tan(x);
+}
+class FunctionCallExpressionCtg : FunctionCallExpression {
+    internal override double FunctionImplementation(double x) => 1 / Math.Tan(x);
 }
 
 class FunctionCallExpressionAsin : FunctionCallExpression {
@@ -26,10 +29,13 @@ class FunctionCallExpressionAsin : FunctionCallExpression {
 class FunctionCallExpressionAcos : FunctionCallExpression {
     internal override double FunctionImplementation(double x) => Math.Acos(x);
 }
-class FunctionCallExpressionAtan : FunctionCallExpression {
+class FunctionCallExpressionAtg : FunctionCallExpression {
     internal override double FunctionImplementation(double x) => Math.Atan(x);
 }
+class FunctionCallExpressionActg : FunctionCallExpression {
+    internal override double FunctionImplementation(double x) => Math.Atan(1 / x);
+}
 
-class FunctionCallExpressionLog : FunctionCallExpression{
+class FunctionCallExpressionLn : FunctionCallExpression{
     internal override double FunctionImplementation(double x) => Math.Log(x);
 }

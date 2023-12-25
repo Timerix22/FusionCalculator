@@ -119,7 +119,11 @@ class Parser {
                             PushFunctionExpression(expressionStack, str, new FunctionCallExpressionCos());
                             break;
                         case "tan":
-                            PushFunctionExpression(expressionStack, str, new FunctionCallExpressionTan());
+                        case "tg":
+                            PushFunctionExpression(expressionStack, str, new FunctionCallExpressionTg());
+                            break;
+                        case "ctg":
+                            PushFunctionExpression(expressionStack, str, new FunctionCallExpressionCtg());
                             break;
                         case "asin":
                             PushFunctionExpression(expressionStack, str, new FunctionCallExpressionAsin());
@@ -128,10 +132,16 @@ class Parser {
                             PushFunctionExpression(expressionStack, str, new FunctionCallExpressionAcos());
                             break;
                         case "atan":
-                            PushFunctionExpression(expressionStack, str, new FunctionCallExpressionAtan());
+                        case "atg":
+                        case "arctg":
+                            PushFunctionExpression(expressionStack, str, new FunctionCallExpressionAtg());
                             break;
-                        case "log":
-                            PushFunctionExpression(expressionStack, str, new FunctionCallExpressionLog());
+                        case "actg":
+                        case "arcctg":
+                            PushFunctionExpression(expressionStack, str, new FunctionCallExpressionActg());
+                            break;
+                        case "ln":
+                            PushFunctionExpression(expressionStack, str, new FunctionCallExpressionLn());
                             break;
                         default: {
                             ThrowError($"invalid literal '{str}'");
