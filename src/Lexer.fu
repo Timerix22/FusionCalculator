@@ -48,9 +48,18 @@ class Lexer {
                 case '/': AddStaticToken(TokDiv); break;
                 case '+': AddStaticToken(TokAdd); break;
                 case '-': 
-                    if(i != 0 && ExprStr[i-1] != '(')
+                    // if '-' is not the first char and previous char isn't '(' or 'e' or 'E'
+                    if(i != 0 && ExprStr[i-1] != '(' 
+                        && ExprStr[i-1] != 'e' && ExprStr[i-1] != 'E')
                         AddStaticToken(TokSub);
                     // else '-' is a part of numeric expression
+                    break;
+                case 'e':
+                case 'E':
+                    // if token starts with 'E' it is a literal
+                    if(i == tokBegin)
+                        tokType = Token.Type_Literal;
+                    // else 'E' is a part of literal or number (sientific notation)
                     break;
                 // try end token and skip current char
                 case ' ': case '\t': case '\n': case '\r':
