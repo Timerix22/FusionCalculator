@@ -2,14 +2,15 @@ public static class MainClass {
     public static void Main(string[] args){
         #if CS
         native {
-            System.Globalization.CultureInfo.DefaultThreadCurrentCulture =                System.Globalization.CultureInfo.InvariantCulture;
+            System.Globalization.CultureInfo.DefaultThreadCurrentCulture = 
+                System.Globalization.CultureInfo.InvariantCulture;
         }
         #endif
         string() joined = "";
         foreach(string arg in args){
             joined += arg + " ";
         }
-        double rezult = Calculator.Calculate(joined);
-        Console.WriteLine(rezult);
+        double result = Calculator.Calculate(joined);
+        Console.WriteLine(result);
     }
 }

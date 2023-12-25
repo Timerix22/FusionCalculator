@@ -29,17 +29,26 @@ class OperatorExpressionDiv : OperatorExpression {
 }
 
 class OperatorExpressionMod : OperatorExpression {
-    // returns if b>0 then returns a%b else returns a
     internal override double OperatorImplementation(double a, double b) {
-        if(b <= 0)
+        if(a == 0)
+            return b;
+        if(b == 0)
             return a;
         if(a > 0){
-            while(a >= b)
-                a -= b;
+            if(b > 0)
+                while(a-b >= 0)
+                    a -= b;
+            else 
+                while(a+b >= 0)
+                    a += b;
         }
         else {
-            while(a <= b)
-                a += b;
+            if(b > 0)
+                while(a+b <= 0)
+                    a += b;
+            else 
+                while(a-b <= 0)
+                    a -= b;
         }
         return a;
     }
