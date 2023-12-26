@@ -11,16 +11,43 @@ abstract class FunctionCallExpression : IExpression {
 }
 
 class FunctionCallExpressionSin : FunctionCallExpression {
-    internal override double FunctionImplementation(double x) => Math.Sin(x);
+    internal override double FunctionImplementation(double x) {
+#if IMPLEMENT_MATH_FUNCTIONS
+        return MyMath.Sin(x);
+#else
+        return Math.Sin(x);
+#endif
+    }
 }
+
 class FunctionCallExpressionCos : FunctionCallExpression {
-    internal override double FunctionImplementation(double x) => Math.Cos(x);
+    internal override double FunctionImplementation(double x) {
+#if IMPLEMENT_MATH_FUNCTIONS
+        return MyMath.Cos(x);
+#else
+        return Math.Cos(x);
+#endif
+    }
 }
+
 class FunctionCallExpressionTg : FunctionCallExpression {
-    internal override double FunctionImplementation(double x) => Math.Tan(x);
+    internal override double FunctionImplementation(double x){
+#if IMPLEMENT_MATH_FUNCTIONS
+        return MyMath.Tg(x);
+#else 
+        return Math.Tan(x);
+#endif
+    }
 }
+
 class FunctionCallExpressionCtg : FunctionCallExpression {
-    internal override double FunctionImplementation(double x) => 1 / Math.Tan(x);
+    internal override double FunctionImplementation(double x) {
+#if IMPLEMENT_MATH_FUNCTIONS
+        return MyMath.Ctg(x);
+#else 
+        return 1 / Math.Tan(x);
+#endif
+    }
 }
 
 class FunctionCallExpressionAsin : FunctionCallExpression {

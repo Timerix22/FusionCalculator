@@ -1,0 +1,50 @@
+//
+// My implementation of math functions using Taylor (Maclaurin) series
+// https://en.wikipedia.org/wiki/Taylor_series#List_of_Maclaurin_series_of_some_common_functions
+//
+public class MyMath {
+    /// TODO: fix fail on tg(pi/2), tg(pi*), ctg(pi*2)
+    static double ClampRadians(double x){
+        int quotient = 0;
+        double pi2 = 2*Math.PI;
+        native {
+            quotient = (int)(x / pi2);
+        }
+        x -= pi2 * quotient;
+        return x;
+    } 
+
+    public static double Sin(double x){
+        x = ClampRadians(x);
+        int iters = 16;
+        double pow = x;
+        double fact = 1;
+        double result = x;
+        for(int i = 3; i <= (2*iters+1); i+=2){
+            pow *= x*x; // x power +2
+            fact *= i * (i-1); // making i! from (i-2)!
+            fact *= -1; // change sign every iteration
+            result += pow/fact;
+        }
+        return result;
+    }
+
+    public static double Cos(double x){
+        x = ClampRadians(x);
+        int iters = 16;
+        double pow = 1;
+        double fact = 1;
+        double result = 1;
+        for(int i = 2; i <= (2*iters); i+=2){
+            pow *= x*x; // x power +2
+            fact *= i * (i-1); // making i! from (i-2)!
+            fact *= -1; // change sign every iteration
+            result += pow/fact;
+        }
+        return result;
+    }
+
+    public static double Tg(double x) => Sin(x)/Cos(x);
+
+    public static double Ctg(double x) => Cos(x)/Sin(x);
+}
